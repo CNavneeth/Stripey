@@ -1,0 +1,96 @@
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('images/bg.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+.login-container {
+    background-color: #0c5c6e;
+    opacity: 0.9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(11, 77, 104, 0.1);
+    width: 300px;
+    text-align: center;
+    transition: opacity 1s ease-in-out;
+}
+
+.login-container.fade-out {
+    opacity: 0;
+}
+
+.login-container h2 {
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #0b6068;
+    border-radius: 4px;
+}
+
+button {
+    width: 60%;
+    padding: 10px;
+    background-color: #36abb1;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0c6c87;
+}
+
+footer {
+    background-color: #0c5c6e;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.head {
+    position: relative;
+    top: 0;
+    left: 0;
+    color: white;
+}
+
+.head h1 {
+    font-size: 80px;
+}
+
+.loading {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5em;
+    color: white;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}

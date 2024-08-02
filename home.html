@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse</title>
+    <link rel="stylesheet" href="home.css">
+</head>
+<body>
+    
+    <header class="head">
+        <h1>Stripey</h1>
+        <h1>Your Friendly Neighbourhood Recommendation System</h1>
+        <div class="header-right">
+            <section class="search-section">
+                <input type="text" id="search-bar" placeholder="Search for products...">
+            </section>
+            <section class="filter-section">
+                <h2>Filter Products</h2>
+                <select id="category-filter">
+                    <option value="all">All Categories</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="accessories">Accessories</option>
+                    
+                </select>
+            </section>
+            <div class="cart-icon" onclick="showCart()">
+                <img src="images/cart-icon.png" alt="Cart">
+                <span id="cart-count">0</span>
+            </div>
+        </div>
+    </header>
+    <div class="content">
+        
+        <section class="recommendations">
+            <h2>Recommended Products</h2>
+            <div id="product-list" class="product-list"></div>
+        </section>
+    </div>
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeProductModal()">&times;</span>
+            <div id="modal-product-info"></div>
+        </div>
+    </div>
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeCart()">&times;</span>
+            <h2>Shopping Cart</h2>
+            <div id="cart-items" class="cart-items"></div>
+            <p id="cart-total">Total: $0.00</p>
+        </div>
+    </div>
+    <script>
+        let products = [];
+        let cart = [];
+
+        async function fetchProducts() {
+            try {
+                const response = await fetch('products.json');
+                products = await response.json();
+                handleFilter();
+            } catch (error) {
+                console.error('Error fetching product data:', error);
+            }
+        }
+
+        function displayProducts(filteredProducts) {
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = '';
+            filteredProducts.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.className = 'product';
+                productDiv.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <p>$${product.price.toFixed(2)}</p>
+                        <button onclick="showProductDetails(${product.id})">View Details</button>
+                        <button onclick="addToCart(${product.id})">Add to Cart</button>
+                        <button class="try-it-out-button" onclick="tryItOut('${product.url}')">Try It Out</button>
+                    </div>
+                `;
+                productList.appendChild(productDiv);
+            });
+        }
+
+        function handleFilter() {
+            const selectedCategory = document.getElementById('category-filter').value;
+            const searchTerm = document.getElementById('search-bar').value.toLowerCase();
+            
+            const filteredProducts = products.filter(product => {
+                const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
+                const matchesSearch = product.name.toLowerCase().includes(searchTerm);
+                return matchesCategory && matchesSearch;
+            });
+            
+            displayProducts(filteredProducts);
+        }
+
+        function showProductDetails(productId) {
+            const product = products.find(p => p.id === productId);
+            const modalProductInfo = document.getElementById('modal-product-info');
+            modalProductInfo.innerHTML = `
+                <img src="${product.image}" alt="${product.name}">
+                <h3>${product.name}</h3>
+                <p>$${product.price.toFixed(2)}</p>
+                <p>${product.description}</p>
+            `;
+            document.getElementById('product-modal').style.display = 'block';
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                cart.push(product);
+                updateCart();
+            }
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartItems = document.getElementById('cart-items');
+            const cartCount = document.getElementById('cart-count');
+            const cartTotal = document.getElementById('cart-total');
+            
+            cartItems.innerHTML = '';
+            let total = 0;
+            cart.forEach(item => {
+                total += item.price;
+                cartItems.innerHTML += `
+                    <div class="cart-item">
+                        <img src="${item.image}" alt="${item.name}">
+                        <div class="cart-item-info">
+                            <h3>${item.name}</h3>
+                            <p>$${item.price.toFixed(2)}</p>
+                        </div>
+                        <button onclick="removeFromCart(${item.id})" class="delete-button">Delete</button>
+                    </div>
+                `;
+            });
+            cartCount.innerText = cart.length;
+            cartTotal.innerText = `Total: $${total.toFixed(2)}`;
+        }
+
+        function showCart() {
+            document.getElementById('cart-modal').style.display = 'block';
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').style.display = 'none';
+        }
+
+        function closeCart() {
+            document.getElementById('cart-modal').style.display = 'none';
+        }
+
+        function tryItOut(url) {
+            window.location.href = url;
+        }
+
+        document.getElementById('category-filter').addEventListener('change', handleFilter);
+        document.getElementById('search-bar').addEventListener('input', handleFilter);
+        fetchProducts();
+    </script>
+</body>
+</html>

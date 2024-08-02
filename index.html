@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .loading {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5em;
+            color: white;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .fade-out {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .error-message {
+            color: white;
+            display: none;
+            margin-top: 10px;
+        }
+
+        footer {
+            padding: 10px 0; 
+            background-color: #0c5c6e; 
+            color: white; 
+            text-align: center;
+        }
+
+        footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <header class="head">
+        <h1>STRIPEY</h1>
+    </header>
+    <div class="login-container">
+        <h2 style="color: white;">Login</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username" style="color: white;">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password" style="color: white;">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+            <div class="error-message" id="error-message">Invalid username or password</div>
+        </form>
+        <div class="loading" id="loading">Loading...</div>
+    </div>
+    <footer>
+        <p>&copy; 2024 Met A Four</p>
+        <p>Providing quality services since 2024</p>
+    </footer>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const correctUsername = 'metafour';
+            const correctPassword = '6789';
+
+            if (username === correctUsername && password === correctPassword) {
+                
+                const loading = document.getElementById('loading');
+                loading.style.display = 'block';
+                setTimeout(() => {
+                    loading.style.opacity = 1;
+                }, 10);
+
+                const loginContainer = document.querySelector('.login-container');
+                loginContainer.classList.add('fade-out');
+
+                setTimeout(function() {
+                    window.location.href = 'detailhome.html';
+                }, 3000); 
+            } else {
+                
+                const errorMessage = document.getElementById('error-message');
+                errorMessage.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

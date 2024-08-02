@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Recommendations</title>
+    <style>
+        body, h1, form, input, button {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #results {
+            margin-top: 20px;
+        }
+
+        #results ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        #results li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #results li:last-child {
+            border-bottom: none;
+        }
+    </style>
+    <script>
+        async function getRecommendations() {
+            const category = document.getElementById('category').value;
+            const response = await fetch(`/recommend?category=${category}`);
+            const recommendations = await response.json();
+
+            const resultDiv = document.getElementById('results');
+            resultDiv.innerHTML = '';
+
+            if (recommendations.length === 0) {
+                resultDiv.innerHTML = 'No products found for this category.';
+                return;
+            }
+
+            const list = document.createElement('ul');
+            recommendations.forEach(product => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `Product: ${product.PRODUCT}, Price: $${product.PRICE}, Rating: ${product.RATING}`;
+                list.appendChild(listItem);
+            });
+            resultDiv.appendChild(list);
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Product Recommendations</h1>
+        <form onsubmit="event.preventDefault(); getRecommendations();">
+            <label for="category">Category:</label>
+            <input type="text" id="category" name="category" value="ELECTRONICS" required>
+            <button type="submit">Get Recommendations</button>
+        </form>
+        <div id="results"></div>
+    </div>
+</body>
+</html>
