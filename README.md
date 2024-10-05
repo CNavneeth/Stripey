@@ -34,4 +34,4 @@ Make sure you have the following installed:
 
 ## Authors
 
-- [Your Name](https://github.com/your-username)
+- [Navneeth C](https://github.com/your-username)
